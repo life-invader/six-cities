@@ -3,7 +3,6 @@ import { AmenitiesType } from '../../types/amenities.type';
 import { CoordsType } from '../../types/coords.type';
 import { HousingType } from '../../types/housing.type';
 import { RentalOfferType } from '../../types/rental-offer.type';
-import { UserType } from '../../types/user.type';
 import { FileReaderInterface } from './file-reader.interface';
 
 export default class TSVFileReader implements FileReaderInterface {
@@ -24,7 +23,7 @@ export default class TSVFileReader implements FileReaderInterface {
       .split('\n')
       .filter((row) => row.trim() !== '')
       .map((line) => line.split('\t'))
-      .map(([title, description, date, city, image, photos, isPremium, rating, housingType, numberOfRooms, numberOfGuests, price, amenities, name, email, avatar, password, type, numberOfComments, lat, long]) => ({
+      .map(([title, description, date, city, image, photos, isPremium, rating, housingType, numberOfRooms, numberOfGuests, price, amenities, userId, numberOfComments, lat, long]) => ({
         title,
         description,
         date: new Date(date),
@@ -38,13 +37,7 @@ export default class TSVFileReader implements FileReaderInterface {
         numberOfGuests: Number(numberOfGuests),
         price: Number(price),
         amenities: amenities.split(';') as AmenitiesType[],
-        author: {
-          name,
-          email,
-          avatar,
-          password,
-          type
-        } as UserType,
+        author: Number(userId),
         numberOfComments: Number(numberOfComments),
         coords: {
           lat: Number(lat),

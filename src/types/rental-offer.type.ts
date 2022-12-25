@@ -1,7 +1,6 @@
 import { AmenitiesType } from './amenities.type';
 import { CoordsType } from './coords.type';
 import { HousingType } from './housing.type';
-import { UserType } from './user.type';
 
 export type RentalOfferType = {
   title: string;
@@ -17,7 +16,7 @@ export type RentalOfferType = {
   numberOfGuests: number;
   price: number;
   amenities: AmenitiesType[];
-  author: UserType;
+  author: number;
   numberOfComments: number;
   coords: CoordsType;
 }
