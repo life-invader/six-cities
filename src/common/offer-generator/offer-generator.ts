@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { getRandomItems, getRandomItem, generateRandomValue } from '../../utils/random.js';
+import { getRandomItem, generateRandomValue } from '../../utils/random.js';
 
 import type { MockDataType } from '../../types/mock-data.type';
 import type { OfferGeneratorInterface } from './offer-generator.interface';
@@ -17,7 +17,7 @@ export default class OfferGenerator implements OfferGeneratorInterface {
     const city = getRandomItem(this.mockData.city);
     const image = getRandomItem(this.mockData.image);
     const photos = getRandomItem(this.mockData.photos).join(';');
-    const isPremium = getRandomItems(this.mockData.isPremium);
+    const isPremium = getRandomItem([true, false]);
     const rating = generateRandomValue(0, 5, 1);
     const housingType = getRandomItem(this.mockData.housingType);
     const numberOfRooms = generateRandomValue(1, 8);

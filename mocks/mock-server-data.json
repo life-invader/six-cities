@@ -81,10 +81,6 @@
       "56.jpg"
     ]
   ],
-  "isPremium": [
-    true,
-    false
-  ],
   "housingType": [
     "apartment",
     "house",

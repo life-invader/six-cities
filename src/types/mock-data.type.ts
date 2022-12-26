@@ -4,7 +4,6 @@ export type MockDataType = {
   city: string[],
   image: string[],
   photos: string[][],
-  isPremium: boolean[],
   housingType: string[],
   amenities: string[][],
 }
