@@ -1,5 +1,4 @@
 import { createWriteStream, WriteStream } from 'fs';
-
 import type { FileWriterInterface } from './file-writer.interface';
 
 export default class TSVFileWriter implements FileWriterInterface {
