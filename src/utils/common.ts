@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import type { AmenitiesType } from '../types/amenities.type';
 import type { CoordsType } from '../types/coords.type';
 import type { HousingType } from '../types/housing.type';
@@ -31,3 +32,8 @@ export const createOffer = (row: string): RentalOfferType => {
 };
 
 export const getErrorMessage = (error: unknown) => error instanceof Error ? error.message : '';
+
+export const createSHA256 = (line: string, salt: string): string => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(line).digest('hex');
+};
