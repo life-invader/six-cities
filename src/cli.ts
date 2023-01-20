@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+// Команда запуска
+// ./dist/cli.js --import ./mocks/mocks-data.tsv Admin qwerty 127.0.0.1 html-academy-nodejs-1 345fdgfd34532
+
 import 'reflect-metadata';
 import CliApplication from './app/cli-application.js';
 import HelpCommand from './cli-command/help-command.js';

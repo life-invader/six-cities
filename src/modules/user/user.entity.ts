@@ -1,5 +1,5 @@
 import { prop, defaultClasses, modelOptions, getModelForClass } from '@typegoose/typegoose';
-import { createSHA256 } from '../../utils/common';
+import { createSHA256 } from '../../utils/common.js';
 import type { UserType } from '../../types/user.type';
 
 const { TimeStamps } = defaultClasses;
@@ -19,8 +19,8 @@ export class UserEntity extends TimeStamps implements UserType {
 
   @prop({
     required: true,
-    min: [1, 'Слишком короткое имя'],
-    max: [15, 'Имя больше 15 символов'],
+    minlength: [1, 'Слишком короткое имя'],
+    maxlength: [15, 'Имя больше 15 символов'],
     trim: true,
   })
   public name!: string;
@@ -39,8 +39,6 @@ export class UserEntity extends TimeStamps implements UserType {
 
   @prop({
     required: true,
-    min: [6, 'Длина пароля менее 6 символов'],
-    max: [12, 'Длина пароля более 12 символов'],
   })
   public password!: string;
 

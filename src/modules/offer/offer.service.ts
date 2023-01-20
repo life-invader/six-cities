@@ -1,8 +1,8 @@
-import CreateOfferDto from "./dto/create-offer.dto";
-import { types } from "@typegoose/typegoose";
-import { OfferEntity } from "./offer.entity";
 import { inject, injectable } from "inversify";
-import { Component } from "../../types/component.types";
+import { types } from "@typegoose/typegoose";
+import CreateOfferDto from "./dto/create-offer.dto";
+import { OfferEntity } from "./offer.entity.js";
+import { Component } from "../../types/component.types.js";
 
 import type { LoggerInterface } from "../../common/logger/logger.interface";
 import type { OfferServiceInterface } from "./offer-service.interface";

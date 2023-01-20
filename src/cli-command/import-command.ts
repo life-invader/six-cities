@@ -4,15 +4,19 @@ import ConsoleLoggerService from '../common/logger/console-logger.service.js';
 import { createOffer } from '../utils/common.js';
 import { getURI } from '../utils/db.js';
 import { RentalOfferType } from '../types/rental-offer.type.js';
-import OfferService from '../modules/offer/offer.service.js';
 import { OfferModel } from '../modules/offer/offer.entity.js';
+import { UserModel } from '../modules/user/user.entity.js';
+import OfferService from '../modules/offer/offer.service.js';
+import UserService from '../modules/user/user.service.js';
 
 import type { LoggerInterface } from '../common/logger/logger.interface.js';
 import type { OfferServiceInterface } from '../modules/offer/offer-service.interface.js';
 import type { DatabaseInterface } from '../common/database-client/database.interface.js';
 import type { CliCommandInterface } from './cli-command.interface';
+import type { UserServiceInterface } from '../modules/user/user-service.interface.js';
 
 const DEFAULT_DB_PORT = 27017;
+const DEFAULT_USER_PASSWORD = 'qwerty';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
@@ -20,18 +24,23 @@ export default class ImportCommand implements CliCommandInterface {
   private logger: LoggerInterface;
   private databaseService: DatabaseInterface;
   private offerService: OfferServiceInterface;
+  private userService: UserServiceInterface;
 
   constructor() {
     this.logger = new ConsoleLoggerService();
     this.databaseService = new DatabaseService(this.logger);
     this.offerService = new OfferService(this.logger, OfferModel);
+    this.userService = new UserService(this.logger, UserModel);
+
+    this.onLine = this.onLine.bind(this);
+    this.onComplete = this.onComplete.bind(this);
   }
 
   private async onLine(line: string, resolve: () => void) {
     const offer = createOffer(line);
     this.logger.info('Offer created', offer);
     await this.saveOffer(offer);
-    resolve(); // Зачем ?
+    resolve();
   }
 
   private onComplete(count: number) {
@@ -61,6 +70,11 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   async saveOffer(offer: RentalOfferType) {
-    await this.offerService.create(offer);
+    const user = await this.userService.findOrCreate({
+      ...offer.author,
+      password: DEFAULT_USER_PASSWORD,
+    }, this.salt);
+
+    await this.offerService.create({ ...offer, author: user.id });
   }
 }
