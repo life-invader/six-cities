@@ -14,8 +14,8 @@ export const createOffer = (row: string): RentalOfferType => {
     email,
     avatar,
     password,
-    type: type as "standard" | "pro",
-  }
+    type: type as 'standard' | 'pro',
+  };
 
   return {
     title,

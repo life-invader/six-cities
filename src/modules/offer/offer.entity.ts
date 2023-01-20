@@ -1,8 +1,8 @@
-import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from "@typegoose/typegoose";
-import { UserEntity } from "../user/user.entity.js";
-import type { CoordsType } from "../../types/coords.type";
+import { defaultClasses, getModelForClass, modelOptions, prop, Ref } from '@typegoose/typegoose';
+import { UserEntity } from '../user/user.entity.js';
+import type { CoordsType } from '../../types/coords.type';
 
-export interface OfferEntity extends defaultClasses.Base { };
+export interface OfferEntity extends defaultClasses.Base { }
 
 @modelOptions({ schemaOptions: { collection: 'offers' } })
 export class OfferEntity extends defaultClasses.TimeStamps {

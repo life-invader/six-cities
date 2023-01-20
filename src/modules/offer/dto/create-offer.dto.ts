@@ -1,6 +1,6 @@
-import type { AmenitiesType } from "../../../types/amenities.type";
-import type { CoordsType } from "../../../types/coords.type";
-import type { HousingType } from "../../../types/housing.type";
+import type { AmenitiesType } from '../../../types/amenities.type';
+import type { CoordsType } from '../../../types/coords.type';
+import type { HousingType } from '../../../types/housing.type';
 
 export default class CreateOfferDto {
   public title!: string;

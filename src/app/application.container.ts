@@ -1,6 +1,6 @@
 import { Container } from 'inversify';
 import { Component } from '../types/component.types';
-import Application from './application';
+import Application from './application.ts';
 import ConfigService from '../common/config/config.service';
 import LoggerService from '../common/logger/logger.service';
 import DatabaseService from '../common/database-client/database.service';
