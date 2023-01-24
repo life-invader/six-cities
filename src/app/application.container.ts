@@ -1,9 +1,9 @@
 import { Container } from 'inversify';
-import { Component } from '../types/component.types';
-import Application from './application.ts';
-import ConfigService from '../common/config/config.service';
-import LoggerService from '../common/logger/logger.service';
-import DatabaseService from '../common/database-client/database.service';
+import { Component } from '../types/component.types.js';
+import Application from './application.js';
+import ConfigService from '../common/config/config.service.js';
+import LoggerService from '../common/logger/logger.service.js';
+import DatabaseService from '../common/database-client/database.service.js';
 
 const appContainer = new Container({ defaultScope: 'Singleton' });
 

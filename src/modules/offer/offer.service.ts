@@ -1,6 +1,7 @@
 import { inject, injectable } from 'inversify';
 import { types } from '@typegoose/typegoose';
 import CreateOfferDto from './dto/create-offer.dto';
+import UpdateOfferDto from './dto/update-offer.dto';
 import { OfferEntity } from './offer.entity.js';
 import { Component } from '../../types/component.types.js';
 
@@ -22,6 +23,31 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   async findById(offerId: string) {
-    return this.offerModel.findById(offerId).exec();
+    return this.offerModel.findById(offerId).populate('author').exec();
+  }
+
+  async find() {
+    return this.offerModel.find().populate('users').exec();
+  }
+
+  async deleteById(id: string) {
+    return this.offerModel.findByIdAndDelete(id).exec();
+  }
+
+  async updateById(id: string, dto: UpdateOfferDto) {
+    return this.offerModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
+
+  async incCommentCount(id: string) {
+    return this.offerModel
+      .findByIdAndUpdate(id, {
+        '$inc': {
+          numberOfComments: 1,
+        }
+      }).exec();
+  }
+
+  public async exists(id: string) {
+    return (await this.offerModel.exists({ _id: id })) !== null;
   }
 }
