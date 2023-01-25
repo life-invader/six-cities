@@ -1,0 +1,415 @@
+openapi: 3.0.0
+info:
+  title: API сервер для проекта «Six Cities»
+  description: |-
+    * Список ресурсов и маршрутов сервера «Six Cities».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+
+tags:
+  - name: offers
+    description: Действия с объявлениями.
+  - name: comments
+    description: Действия с комментариями.
+  - name: users
+    description: Действия с пользователем.
+
+paths:
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Предложения об аренде
+      description: Получение всех предложений об аренде
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offerFull'
+
+    post:
+      tags:
+        - offers
+      summary: Создание предложения
+      description: Создание нового предложения об аренде
+
+      requestBody:
+        description: Информация для создания нового предложения.
+        content:
+          application/json:
+            schema:
+                  $ref: '#/components/schemas/offerCreate'
+        required: true
+
+      responses:
+        "201":
+          description: ok.
+
+        "401":
+          description: Не авторизован
+
+
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+
+      requestBody:
+        description: Информация для логина в систему.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+
+      responses:
+        "201":
+          description: ok.
+
+        "409":
+          description: Неверный логин или пароль.
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+      responses:
+        "201":
+          description: ok.
+
+        "409":
+          description: Неверный логин или пароль.
+
+  /users/{userId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузить изображение аватара
+      description: Загружает изображение аватара пользователя. Изображение
+        аватара должно быть в формате `png` или `jpg`.
+
+      responses:
+        "201":
+          description: ok.
+
+        "409":
+          description: Неверный логин или пароль.
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: 'Получение комментариев'
+      description: 'Получение списка комментария для предложения об аренде'
+      responses:
+        "200":
+          description: 'Список комментариев успешно получен'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comments'
+        "500":
+          description: 'Ошибка получения комментариев'
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/errorMessage'
+
+    post:
+      tags:
+        - comments
+      summary: 'Создание комментария'
+      description: 'Создание нового комментария для предложения об аренде'
+
+      requestBody:
+        description: Информация для создания нового комментария.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/comment'
+        required: true
+
+      responses:
+        "200":
+          description: 'Комментарий создан'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comment'
+        "401":
+          description: 'Не авторизован'
+
+components:
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: email@gmail.com
+
+        name:
+          type: string
+          example: Alexander Leontyev
+
+        password:
+          type: string
+          example: qwerty
+
+        type:
+          type: string
+          example: standard
+
+    user:
+      type: object
+
+      properties:
+        id:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+        email:
+          type: string
+          example: email@gmail.com
+
+    loginUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: email@gmail.com
+
+        password:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+    comment:
+      type: object
+
+      properties:
+        text:
+          type: string
+          example: email@gmail.com
+
+        rating:
+          type: number
+          example: 4
+
+        author:
+          type: string
+          example: dfgdfb43dfg
+
+    commentWithDate:
+      type: object
+
+      properties:
+        text:
+          type: string
+          example: email@gmail.com
+
+        rating:
+          type: number
+          example: 4
+
+        author:
+          type: string
+          example: dfgdfb43dfg
+
+        date:
+          type: string
+          example: 6329c3d6a04ab1061c6425ea
+
+    comments:
+      type: array
+      maxLength: 50
+      items:
+        properties:
+          text:
+            type: string
+            example: email@gmail.com
+
+          rating:
+            type: number
+            example: 4
+
+          author:
+            type: string
+            example: dfgdfb43dfg
+
+    errorMessage:
+      type: string
+      maxLength: 256
+      description: Не удалось выполнить запрос
+
+    offerFull:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: This is title
+
+        description:
+          type: string
+          example: This is description
+
+        date:
+          type: string
+          example: 2023/01/24
+
+        city:
+          type: string
+          example: Berlin
+
+        image:
+          type: string
+          example: pic.jpg
+
+        photos:
+          type: array
+          items:
+            type: string
+            example: photo1.jpg
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4
+
+        housingType:
+          type: string
+          example: This is housing type
+
+        numberOfRooms:
+          type: number
+          example: 4
+
+        numberOfGuests:
+          type: number
+          example: 8
+
+        price:
+          type: number
+          example: 20000
+
+        amenities:
+          type: array
+          items:
+            type: string
+            example: conditioner
+
+        author:
+          type: string
+          example: 34sv23456
+
+        numberOfComments:
+          type: number
+          example: 96
+
+    offerCreate:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: This is title
+
+        description:
+          type: string
+          example: This is description
+
+        date:
+          type: string
+          example: 2023/01/24
+
+        city:
+          type: string
+          example: Berlin
+
+        image:
+          type: string
+          example: pic.jpg
+
+        photos:
+          type: array
+          items:
+            type: string
+            example: photo1.jpg
+
+        isPremium:
+          type: boolean
+          example: true
+
+        rating:
+          type: number
+          example: 4
+
+        housingType:
+          type: string
+          example: This is housing type
+
+        numberOfRooms:
+          type: number
+          example: 4
+
+        numberOfGuests:
+          type: number
+          example: 8
+
+        price:
+          type: number
+          example: 20000
+
+        amenities:
+          type: array
+          items:
+            type: string
+            example: conditioner
+
+        author:
+          type: string
+          example: 34sv23456
+
+        numberOfComments:
+          type: number
+          example: 96
+
