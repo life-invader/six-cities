@@ -17,6 +17,5 @@ export default class CreateOfferDto {
   public price!: number;
   public amenities!: AmenitiesType[];
   public author!: number;
-  public numberOfComments!: number;
   public coords!: CoordsType;
 }

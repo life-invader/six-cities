@@ -35,7 +35,7 @@ export class UserEntity extends TimeStamps implements UserType {
     type: String,
     default: 'default-avatar.jpg'
   })
-  public avatar!: string;
+  public avatar?: string;
 
   @prop({
     required: true,
