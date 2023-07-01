@@ -13,7 +13,7 @@ export default class UserService implements UserServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.UserModel) private userModel: types.ModelType<UserEntity>
-  ) { }
+  ) {}
 
   public async create(dto: CreateUserDto, salt: string) {
     const user = new UserEntity(dto);
@@ -40,8 +40,6 @@ export default class UserService implements UserServiceInterface {
   }
 
   public async updateById(userId: string, dto: UpdateUserDto) {
-    return this.userModel
-      .findByIdAndUpdate(userId, dto, { new: true })
-      .exec();
+    return this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
   }
 }

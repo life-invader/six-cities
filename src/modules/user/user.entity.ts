@@ -1,10 +1,16 @@
-import { prop, defaultClasses, modelOptions, getModelForClass } from '@typegoose/typegoose';
+import {
+  prop,
+  defaultClasses,
+  modelOptions,
+  getModelForClass,
+} from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/common.js';
 import type { UserType } from '../../types/user.type';
+import type { UserAccountType } from '../../types/user-account.type.js';
 
 const { TimeStamps } = defaultClasses;
 
-export interface UserEntity extends defaultClasses.Base { }
+export interface UserEntity extends defaultClasses.Base {}
 
 @modelOptions({ schemaOptions: { collection: 'users' } })
 export class UserEntity extends TimeStamps implements UserType {
@@ -28,14 +34,15 @@ export class UserEntity extends TimeStamps implements UserType {
   @prop({
     required: true,
     unique: true,
+    trim: true,
   })
   public email!: string;
 
   @prop({
-    type: String,
-    default: 'default-avatar.jpg'
+    default: 'default-avatar.jpg',
+    trim: true,
   })
-  public avatar!: string;
+  public avatar?: string;
 
   @prop({
     required: true,
@@ -46,7 +53,7 @@ export class UserEntity extends TimeStamps implements UserType {
     default: 'standard',
     enum: ['standard', 'pro'],
   })
-  public type!: 'standard' | 'pro';
+  public type!: UserAccountType;
 
   public setPassword(password: string, salt: string) {
     this.password = createSHA256(password, salt);
