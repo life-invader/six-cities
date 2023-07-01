@@ -15,20 +15,33 @@ import type { OfferServiceInterface } from './offer-service.interface.js';
 
 type ParamsGetOffer = {
   offerId: string;
-}
+};
 
 export default class OfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
-    @inject(Component.OfferServiceInterface) private offerService: OfferServiceInterface,
+    @inject(Component.OfferServiceInterface)
+    private offerService: OfferServiceInterface
   ) {
     super(logger);
 
     this.addRoute({ path: '/', method: HttpMethod.Post, handler: this.create });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Get, handler: this.show });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Patch, handler: this.update });
-    this.addRoute({ path: '/:offerId', method: HttpMethod.Delete, handler: this.delete });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+    });
   }
 
   public async index(_req: Request, res: Response) {
@@ -37,19 +50,32 @@ export default class OfferController extends Controller {
   }
 
   public async create(
-    req: Request<Record<string, unknown>, Record<string, unknown>, CreateOfferDto>,
+    req: Request<
+      Record<string, unknown>,
+      Record<string, unknown>,
+      CreateOfferDto
+    >,
     res: Response
   ) {
     const result = await this.offerService.create(req.body);
-    const offer = await this.offerService.findById(result.id);
-    this.created(res, fillDTO(ExactOfferResponse, offer));
+    this.created(res, fillDTO(ExactOfferResponse, result));
   }
 
   public async update(
-    { body, params }: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateOfferDto>,
+    {
+      body,
+      params,
+    }: Request<
+      core.ParamsDictionary | ParamsGetOffer,
+      Record<string, unknown>,
+      UpdateOfferDto
+    >,
     res: Response
   ) {
-    const updatedOffer = await this.offerService.updateById(params.offerId, body);
+    const updatedOffer = await this.offerService.updateById(
+      params.offerId,
+      body
+    );
     this.ok(res, fillDTO(ExactOfferResponse, updatedOffer));
   }
 

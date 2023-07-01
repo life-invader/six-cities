@@ -24,12 +24,12 @@ paths:
       summary: Предложения об аренде
       description: Получение всех предложений об аренде
       responses:
-        '200':
+        "200":
           description: ok
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/offerFull'
+                $ref: "#/components/schemas/offerFull"
 
     post:
       tags:
@@ -42,7 +42,7 @@ paths:
         content:
           application/json:
             schema:
-                  $ref: '#/components/schemas/offerCreate'
+              $ref: "#/components/schemas/offerCreate"
         required: true
 
       responses:
@@ -51,7 +51,6 @@ paths:
 
         "401":
           description: Не авторизован
-
 
   /users/register:
     post:
@@ -65,7 +64,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/createUser'
+              $ref: "#/components/schemas/createUser"
         required: true
 
       responses:
@@ -74,7 +73,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: "#/components/schemas/user"
 
         "409":
           description: Пользователь с таким email уже существует.
@@ -91,7 +90,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/loginUser'
+              $ref: "#/components/schemas/loginUser"
         required: true
 
       responses:
@@ -133,45 +132,45 @@ paths:
     get:
       tags:
         - comments
-      summary: 'Получение комментариев'
-      description: 'Получение списка комментария для предложения об аренде'
+      summary: "Получение комментариев"
+      description: "Получение списка комментария для предложения об аренде"
       responses:
         "200":
-          description: 'Список комментариев успешно получен'
+          description: "Список комментариев успешно получен"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/comments'
+                $ref: "#/components/schemas/comments"
         "500":
-          description: 'Ошибка получения комментариев'
+          description: "Ошибка получения комментариев"
           content:
             text/html:
               schema:
-                $ref: '#/components/schemas/errorMessage'
+                $ref: "#/components/schemas/errorMessage"
 
     post:
       tags:
         - comments
-      summary: 'Создание комментария'
-      description: 'Создание нового комментария для предложения об аренде'
+      summary: "Создание комментария"
+      description: "Создание нового комментария для предложения об аренде"
 
       requestBody:
         description: Информация для создания нового комментария.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/comment'
+              $ref: "#/components/schemas/comment"
         required: true
 
       responses:
         "200":
-          description: 'Комментарий создан'
+          description: "Комментарий создан"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/comment'
+                $ref: "#/components/schemas/comment"
         "401":
-          description: 'Не авторизован'
+          description: "Не авторизован"
 
 components:
   schemas:
@@ -412,4 +411,3 @@ components:
         numberOfComments:
           type: number
           example: 96
-

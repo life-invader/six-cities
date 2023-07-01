@@ -18,16 +18,31 @@ export default class UserController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.ConfigInterface) private config: ConfigInterface,
-    @inject(Component.UserServiceInterface) private userService: UserServiceInterface,
+    @inject(Component.UserServiceInterface)
+    private userService: UserServiceInterface
   ) {
     super(logger);
 
-    this.addRoute({ path: '/login', method: HttpMethod.Post, handler: this.login });
-    this.addRoute({ path: '/register', method: HttpMethod.Post, handler: this.create });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+    });
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+    });
+
+    this.logger.info('Registered routes for UserController');
   }
 
   public async login(
-    req: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    req: Request<
+      Record<string, unknown>,
+      Record<string, unknown>,
+      LoginUserDto
+    >,
     res: Response
   ) {
     const user = await this.userService.findByEmail(req.body.email);
@@ -36,7 +51,7 @@ export default class UserController extends Controller {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
         `User with email ${req.body.email} not found.`,
-        'UserController',
+        'UserController'
       );
     }
 
@@ -44,7 +59,11 @@ export default class UserController extends Controller {
   }
 
   public async create(
-    req: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
+    req: Request<
+      Record<string, unknown>,
+      Record<string, unknown>,
+      CreateUserDto
+    >,
     res: Response
   ) {
     const user = await this.userService.findByEmail(req.body.email);
@@ -57,7 +76,10 @@ export default class UserController extends Controller {
       );
     }
 
-    const result = await this.userService.create(req.body, this.config.get('SALT'));
+    const result = await this.userService.create(
+      req.body,
+      this.config.get('SALT')
+    );
     this.send(res, StatusCodes.CREATED, fillDTO(UserResponse, result));
   }
 }

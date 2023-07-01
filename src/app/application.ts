@@ -43,9 +43,9 @@ export default class Application {
     const uri = getURI(this.config.get('DB_USER'), this.config.get('DB_PASSWORD'), this.config.get('DB_HOST'), this.config.get('DB_PORT'), this.config.get('DB_NAME'));
     await this.databaseClient.connect(uri);
 
-    this.initExceptionFilters();
     this.initMiddleware();
     this.registerRoutes();
+    this.initExceptionFilters();
     this.expressApp.listen(this.config.get('PORT'));
     this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
   }

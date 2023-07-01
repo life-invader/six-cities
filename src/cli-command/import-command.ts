@@ -48,7 +48,14 @@ export default class ImportCommand implements CliCommandInterface {
     this.databaseService.disconnect();
   }
 
-  public async execute(filename: string, login: string, password: string, host: string, dbname: string, salt: string) {
+  public async execute(
+    filename: string,
+    login: string,
+    password: string,
+    host: string,
+    dbname: string,
+    salt: string
+  ) {
     this.salt = salt;
 
     const uri = getURI(login, password, host, DEFAULT_DB_PORT, dbname);
@@ -65,15 +72,20 @@ export default class ImportCommand implements CliCommandInterface {
         throw err;
       }
 
-      this.logger.error(`Не удалось импортировать данные из файла по причине: «${err.message}»`);
+      this.logger.error(
+        `Не удалось импортировать данные из файла по причине: «${err.message}»`
+      );
     }
   }
 
   async saveOffer(offer: RentalOfferType) {
-    const user = await this.userService.findOrCreate({
-      ...offer.author,
-      password: DEFAULT_USER_PASSWORD,
-    }, this.salt);
+    const user = await this.userService.findOrCreate(
+      {
+        ...offer.author,
+        password: DEFAULT_USER_PASSWORD,
+      },
+      this.salt
+    );
 
     await this.offerService.create({ ...offer, author: user.id });
   }

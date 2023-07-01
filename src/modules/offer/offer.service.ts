@@ -14,11 +14,12 @@ import type { OfferServiceInterface } from './offer-service.interface';
 export default class OfferService implements OfferServiceInterface {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
-    @inject(Component.OfferModel) private offerModel: types.ModelType<OfferEntity>
-  ) { }
+    @inject(Component.OfferModel)
+    private offerModel: types.ModelType<OfferEntity>
+  ) {}
 
   async create(dto: CreateOfferDto) {
-    const result = await this.offerModel.create(dto);
+    const result = (await this.offerModel.create(dto)).populate('author');
     this.logger.info('Offer created!');
 
     return result;
@@ -28,9 +29,14 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel.findById(offerId).populate('author').exec();
   }
 
+  async findByIdDetailed(offerId: string) {
+    console.log(offerId);
+  }
+
   async find(count?: number) {
     const limit = count || DEFAULT_OFFER_COUNT;
-    return this.offerModel.find()
+    return this.offerModel
+      .find()
       .sort({ createdAt: SortType.Down })
       .limit(limit)
       .populate('author')
@@ -42,7 +48,8 @@ export default class OfferService implements OfferServiceInterface {
   }
 
   async updateById(id: string, dto: UpdateOfferDto) {
-    return this.offerModel.findByIdAndUpdate(id, dto, { new: true })
+    return this.offerModel
+      .findByIdAndUpdate(id, dto, { new: true })
       .populate('author')
       .exec();
   }
@@ -50,10 +57,11 @@ export default class OfferService implements OfferServiceInterface {
   async incCommentCount(id: string) {
     return this.offerModel
       .findByIdAndUpdate(id, {
-        '$inc': {
+        $inc: {
           numberOfComments: 1,
-        }
-      }).exec();
+        },
+      })
+      .exec();
   }
 
   public async exists(id: string) {

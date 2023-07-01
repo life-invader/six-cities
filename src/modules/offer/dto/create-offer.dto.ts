@@ -16,6 +16,6 @@ export default class CreateOfferDto {
   public numberOfGuests!: number;
   public price!: number;
   public amenities!: AmenitiesType[];
-  public author!: number;
+  public author!: string;
   public coords!: CoordsType;
 }
