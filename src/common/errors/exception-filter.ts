@@ -16,7 +16,7 @@ export default class ExceptionFilter implements ExceptionFilterInterface {
   }
 
   private handleHttpError(error: HttpError, _req: Request, res: Response, _next: NextFunction) {
-    this.logger.error(`[${error.detail}]: ${error.httpStatusCode} - ${error.message}`);
+    this.logger.error(`[${error.detail || 'Error'}]: ${error.httpStatusCode} - ${error.message}`);
     res
       .status(error.httpStatusCode)
       .json(createErrorObject(error.message));

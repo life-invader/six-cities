@@ -5,9 +5,9 @@ import type { HousingType } from '../../../types/housing.type.js';
 import type { AmenitiesType } from '../../../types/amenities.type.js';
 import type { CoordsType } from '../../../types/coords.type.js';
 
-export default class OfferResponse {
+export default class ExactOfferResponse {
   @Expose()
-  public _id!: string;
+  public id!: string;
 
   @Expose()
   public title!: string;

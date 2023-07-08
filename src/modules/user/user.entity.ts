@@ -5,8 +5,8 @@ import {
   getModelForClass,
 } from '@typegoose/typegoose';
 import { createSHA256 } from '../../utils/common.js';
+import { UserAccountType } from '../../types/user-account.type.js';
 import type { UserType } from '../../types/user.type';
-import type { UserAccountType } from '../../types/user-account.type.js';
 
 const { TimeStamps } = defaultClasses;
 
@@ -50,8 +50,8 @@ export class UserEntity extends TimeStamps implements UserType {
   public password!: string;
 
   @prop({
-    default: 'standard',
-    enum: ['standard', 'pro'],
+    default: UserAccountType.Standard,
+    enum: UserAccountType,
   })
   public type!: UserAccountType;
 

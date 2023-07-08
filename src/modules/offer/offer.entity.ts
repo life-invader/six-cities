@@ -5,10 +5,11 @@ import {
   prop,
   Ref,
 } from '@typegoose/typegoose';
+import { OfferCity } from '../../types/city.type.js';
 import { UserEntity } from '../user/user.entity.js';
+import { HousingType } from '../../types/housing.type.js';
+import { AmenitiesType } from '../../types/amenities.type.js';
 import type { CoordsType } from '../../types/coords.type';
-import type { HousingType } from '../../types/housing.type.js';
-import type { AmenitiesType } from '../../types/amenities.type.js';
 
 export interface OfferEntity extends defaultClasses.Base {}
 
@@ -37,8 +38,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     required: true,
+    enum: OfferCity,
   })
-  public city!: string;
+  public city!: OfferCity;
 
   @prop({
     required: true,
@@ -63,6 +65,7 @@ export class OfferEntity extends defaultClasses.TimeStamps {
 
   @prop({
     required: true,
+    enum: HousingType,
   })
   public housingType!: HousingType;
 
@@ -88,7 +91,9 @@ export class OfferEntity extends defaultClasses.TimeStamps {
   public price!: number;
 
   @prop({
+    type: () => String,
     required: true,
+    enum: AmenitiesType,
   })
   public amenities!: AmenitiesType[];
 

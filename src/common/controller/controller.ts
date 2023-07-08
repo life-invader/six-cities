@@ -22,29 +22,30 @@ export abstract class Controller implements ControllerInterface {
   }
 
   addRoute(route: RouteInterface): void {
-    this._router[route.method](
-      route.path,
-      asyncHandler(route.handler.bind(this))
+    const middlewares = route.middlewares?.map((mw) =>
+      asyncHandler(mw.execute.bind(mw))
     );
+    const routeHandler = asyncHandler(route.handler.bind(this));
+    const allHandlers = middlewares
+      ? [...middlewares, routeHandler]
+      : routeHandler;
+    this._router[route.method](route.path, allHandlers);
+
     this.logger.info(
       `Route registered: ${route.method.toUpperCase()} ${route.path}`
     );
   }
 
-  send<T>(
-    res: Response,
-    statusCode: number,
-    data: T
-  ): void {
-    res.type('application/json').status(statusCode).json(data);
+  send<T>(res: Response, statusCode: number, data: T): void {
+    res.status(statusCode).json(data);
   }
 
   created<T>(res: Response, data: T): void {
     this.send(res, StatusCodes.CREATED, data);
   }
 
-  noContent<T>(res: Response, data: T): void {
-    this.send(res, StatusCodes.NO_CONTENT, data);
+  noContent(res: Response): void {
+    res.status(StatusCodes.NO_CONTENT).end();
   }
 
   ok<T>(res: Response, data: T): void {

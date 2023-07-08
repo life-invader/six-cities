@@ -16,10 +16,16 @@ export default class Application {
   constructor(
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.ConfigInterface) private config: ConfigService,
-    @inject(Component.DatabaseInterface) private databaseClient: DatabaseService,
-    @inject(Component.UserController) private userController: ControllerInterface,
-    @inject(Component.OfferController) private offerController: ControllerInterface,
-    @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface
+    @inject(Component.DatabaseInterface)
+    private databaseClient: DatabaseService,
+    @inject(Component.UserController)
+    private userController: ControllerInterface,
+    @inject(Component.OfferController)
+    private offerController: ControllerInterface,
+    @inject(Component.CommentController)
+    private commentController: ControllerInterface,
+    @inject(Component.ExceptionFilterInterface)
+    private exceptionFilter: ExceptionFilterInterface
   ) {
     this.expressApp = express();
   }
@@ -30,23 +36,36 @@ export default class Application {
 
   public initMiddleware() {
     this.expressApp.use(express.json());
+    this.expressApp.use(
+      '/upload',
+      express.static(this.config.get('UPLOAD_DIRECTORY'))
+    );
   }
 
   public registerRoutes() {
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/offers', this.offerController.router);
+    this.expressApp.use('/comments', this.commentController.router);
   }
 
   public async init() {
     this.logger.info('Application initialization...');
 
-    const uri = getURI(this.config.get('DB_USER'), this.config.get('DB_PASSWORD'), this.config.get('DB_HOST'), this.config.get('DB_PORT'), this.config.get('DB_NAME'));
+    const uri = getURI(
+      this.config.get('DB_USER'),
+      this.config.get('DB_PASSWORD'),
+      this.config.get('DB_HOST'),
+      this.config.get('DB_PORT'),
+      this.config.get('DB_NAME')
+    );
     await this.databaseClient.connect(uri);
 
     this.initMiddleware();
     this.registerRoutes();
     this.initExceptionFilters();
     this.expressApp.listen(this.config.get('PORT'));
-    this.logger.info(`Server started on http://localhost:${this.config.get('PORT')}`);
+    this.logger.info(
+      `Server started on http://localhost:${this.config.get('PORT')}`
+    );
   }
 }

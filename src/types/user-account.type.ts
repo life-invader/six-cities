@@ -1,1 +1,4 @@
-export type UserAccountType = 'standard' | 'pro';
+export enum UserAccountType {
+  'Standard'= 'standard',
+  'Pro' = 'pro',
+}

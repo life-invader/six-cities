@@ -42,4 +42,8 @@ export default class UserService implements UserServiceInterface {
   public async updateById(userId: string, dto: UpdateUserDto) {
     return this.userModel.findByIdAndUpdate(userId, dto, { new: true }).exec();
   }
+
+  public async exists(userId: string) {
+    return await this.userModel.exists({_id: userId}) !== null;
+  }
 }
