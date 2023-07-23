@@ -2,7 +2,6 @@ import {
   IsArray,
   IsDateString,
   IsEnum,
-  IsMongoId,
   Max,
   MaxLength,
   Min,
@@ -85,7 +84,6 @@ export default class CreateOfferDto {
   @ArrayMaxSize(7)
   public amenities!: AmenitiesType[];
 
-  @IsMongoId({ message: 'author field must be valid Mongo id' })
   public author!: string;
 
   @ValidateNested({ message: 'invalid coordinates' })

@@ -4,6 +4,8 @@ import { Component } from '../types/component.types.js';
 import { getURI } from '../utils/db.js';
 import ConfigService from '../common/config/config.service.js';
 import DatabaseService from '../common/database-client/database.service.js';
+import { AuthenticateMiddleware } from '../common/middlewares/authenticate.middleware.js';
+import { getFullServerPath } from '../utils/common.js';
 
 import type { LoggerInterface } from '../common/logger/logger.interface';
 import type { ControllerInterface } from '../common/controller/controller.interface.js';
@@ -40,6 +42,16 @@ export default class Application {
       '/upload',
       express.static(this.config.get('UPLOAD_DIRECTORY'))
     );
+    this.expressApp.use(
+      '/static',
+      express.static(this.config.get('STATIC_DIRECTORY_PATH'))
+    );
+
+    const authMiddleware = new AuthenticateMiddleware(
+      this.config.get('JWT_SECRET')
+    );
+
+    this.expressApp.use(authMiddleware.execute.bind(authMiddleware));
   }
 
   public registerRoutes() {
@@ -65,7 +77,10 @@ export default class Application {
     this.initExceptionFilters();
     this.expressApp.listen(this.config.get('PORT'));
     this.logger.info(
-      `Server started on http://localhost:${this.config.get('PORT')}`
+      `Server started on ${getFullServerPath(
+        this.config.get('HOST'),
+        this.config.get('PORT')
+      )}`
     );
   }
 }

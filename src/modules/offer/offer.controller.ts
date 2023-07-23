@@ -15,10 +15,13 @@ import CommentResponse from '../comment/response/comment.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectId.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
+import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 
 import type { LoggerInterface } from '../../common/logger/logger.interface.js';
 import type { OfferServiceInterface } from './offer-service.interface.js';
 import type { CommentServiceInterface } from '../comment/comment-service.interface.js';
+import type { ConfigInterface } from '../../common/config/config.interface.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -35,18 +38,23 @@ type GetCommentsParams = {
 export default class OfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) config: ConfigInterface,
     @inject(Component.OfferServiceInterface)
     private offerService: OfferServiceInterface,
     @inject(Component.CommentServiceInterface)
     private commentService: CommentServiceInterface
   ) {
-    super(logger);
+    super(logger, config);
 
     this.addRoute({
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleware(CreateOfferDto)],
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new UploadFileMiddleware(this.config.get('UPLOAD_DIRECTORY'), 'image'),
+        new ValidateDtoMiddleware(CreateOfferDto),
+      ],
     });
     this.addRoute({ path: '/', method: HttpMethod.Get, handler: this.index });
     this.addRoute({
@@ -60,6 +68,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware('offerId', this.offerService, 'Offer'),
         new ValidateDtoMiddleware(UpdateOfferDto),
@@ -70,6 +79,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware('offerId', this.offerService, 'Offer'),
       ],
@@ -94,14 +104,17 @@ export default class OfferController extends Controller {
   }
 
   public async create(
-    req: Request<
+    {
+      body,
+      user,
+    }: Request<
       Record<string, unknown>,
       Record<string, unknown>,
       CreateOfferDto
     >,
     res: Response
   ) {
-    const result = await this.offerService.create(req.body);
+    const result = await this.offerService.create({ ...body, author: user.id });
     this.created(res, fillDTO(ExactOfferResponse, result));
   }
 
