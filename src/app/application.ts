@@ -1,5 +1,6 @@
 import { inject, injectable } from 'inversify';
 import express, { Express } from 'express';
+import cors from 'cors';
 import { Component } from '../types/component.types.js';
 import { getURI } from '../utils/db.js';
 import ConfigService from '../common/config/config.service.js';
@@ -52,6 +53,7 @@ export default class Application {
     );
 
     this.expressApp.use(authMiddleware.execute.bind(authMiddleware));
+    this.expressApp.use(cors());
   }
 
   public registerRoutes() {

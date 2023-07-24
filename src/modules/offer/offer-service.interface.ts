@@ -6,7 +6,6 @@ import { OfferEntity } from './offer.entity';
 export interface OfferServiceInterface {
   create(dto: CreateOfferDto): Promise<DocumentType<OfferEntity>>;
   findById(offerId: string): Promise<DocumentType<OfferEntity> | null>;
-  findByIdDetailed(offerId: string): Promise<void>;
   find(limit?: number): Promise<DocumentType<OfferEntity>[]>;
   deleteById(id: string): Promise<DocumentType<OfferEntity> | null>;
   updateById(
@@ -15,4 +14,5 @@ export interface OfferServiceInterface {
   ): Promise<DocumentType<OfferEntity> | null>;
   incCommentCount(id: string): Promise<DocumentType<OfferEntity> | null>;
   exists(id: string): Promise<boolean>;
+  isMine(userId: string, offerId: string): Promise<boolean>;
 }

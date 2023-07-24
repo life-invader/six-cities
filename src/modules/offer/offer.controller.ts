@@ -122,6 +122,7 @@ export default class OfferController extends Controller {
     {
       body,
       params,
+      user
     }: Request<
       core.ParamsDictionary | ParamsGetOffer,
       Record<string, unknown>,
@@ -129,6 +130,13 @@ export default class OfferController extends Controller {
     >,
     res: Response
   ) {
+    const isMine = await this.offerService.isMine(user.id, params.offerId);
+    console.log(isMine);
+
+    if(!isMine) {
+      throw new HttpError(StatusCodes.FORBIDDEN, 'Offer is not yours!');
+    }
+
     const updatedOffer = await this.offerService.updateById(
       params.offerId,
       body

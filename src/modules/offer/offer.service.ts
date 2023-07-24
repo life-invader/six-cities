@@ -29,10 +29,6 @@ export default class OfferService implements OfferServiceInterface {
     return this.offerModel.findById(offerId).populate('author').exec();
   }
 
-  async findByIdDetailed(offerId: string) {
-    console.log(offerId);
-  }
-
   async find(count?: number) {
     const limit = count || DEFAULT_OFFER_COUNT;
     return this.offerModel
@@ -65,5 +61,10 @@ export default class OfferService implements OfferServiceInterface {
 
   public async exists(id: string) {
     return (await this.offerModel.exists({ _id: id })) !== null;
+  }
+
+  public async isMine(userId: string, offerId: string) {
+    const offer = await this.offerModel.findById(offerId);
+    return offer?.author._id.toString() === userId;
   }
 }

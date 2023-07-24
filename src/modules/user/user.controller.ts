@@ -115,8 +115,11 @@ export default class UserController extends Controller {
     this.send(res, StatusCodes.CREATED, fillDTO(UserResponse, result));
   }
 
-  public async uploadAvatar(req: Request, res: Response) {
-    this.send(res, StatusCodes.OK, req.file?.path);
+  public async uploadAvatar(req: Request<Record<string, string> | {userId: string}>, res: Response) {
+    const userId = req.params.userId;
+    const file = req.file?.filename;
+    const user = await this.userService.updateById(userId, {avatar: file});
+    this.send(res, StatusCodes.OK, fillDTO(UserResponse, user));
   }
 
   public async checkAuthentication(req: Request, res: Response) {

@@ -39,7 +39,6 @@ export default class CommentController extends Controller {
   }
 
   async create(
-    // req: Request<Record<string, string>, unknown, CreateCommentDto>,
     req: Request<
       Record<string, string>,
       unknown,
@@ -56,7 +55,6 @@ export default class CommentController extends Controller {
       );
     }
 
-    // const comment = await this.commentService.create(req.body);
     const comment = await this.commentService.create({
       ...req.body,
       userId: req.user.id,
